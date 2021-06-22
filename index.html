@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"
+        integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Encrypt your text</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"
+        integrity="sha512-nOQuvD9nKirvxDdvQ9OMqe2dgapbPB7vYAMrzJihw5m+aNcf0dX53m6YxM4LgA9u8e9eg9QX+/+mPu8kCNpV2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
+</head>
+
+<body>
+    <img src="locker.png" class="logo" width="160px" height="160px" alt="">
+    <div class="">
+        <textarea id="passphrase" class="passphrase" rows=1 placeholder="Passphrase to encrypt/decrypt text"></textarea>
+        <textarea id="raw-text" class="raw-text" rows=5 placeholder="Text to be encrypted/decrypted"></textarea>
+        <div class="buttons">
+            <button onclick="encrypt()">Encrypt</button>
+            <button onclick="decrypt()">Decrypt</button>
+        </div>
+        <textarea id="encrypted-text" readonly class="raw-text" rows=5 type="text"
+            placeholder="Processed text"></textarea>
+        <button onclick="copyClipboard()">Copy processed text</button>
+    </div>
+</body>
+
+<style>
+    body {
+        max-width: 500px;
+        margin: auto;
+        background: #15202B;
+        padding: 10px;
+    }
+
+    .logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .flexbox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .flexbox>div,
+    .flexbox>textarea,
+    .flexbox>button {
+        margin: 0px 0px 10px 0px;
+    }
+
+    .buttons>button {
+        margin: 10px;
+    }
+
+    .raw-text {
+        width: -webkit-fill-available
+    }
+
+    .passphrase {
+        width: -webkit-fill-available
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    textarea {
+        font-size: .8rem;
+        letter-spacing: 1px;
+    }
+
+    textarea {
+        padding: 10px;
+        line-height: 1.5;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-shadow: 1px 1px 1px #999;
+    }
+</style>
+
+<script>
+    function copyClipboard() {
+        var text = document.getElementById('encrypted-text').value;
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+        textarea.value = text;
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+
+    function encryptText(text, passphrase) {
+        return CryptoJS.AES.encrypt(text, passphrase).toString();
+    }
+    function decryptText(ciphertext, passphrase) {
+        var bytes = CryptoJS.AES.decrypt(ciphertext, passphrase);
+        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+        return originalText;
+    }
+    function encrypt() {
+        var passphrase = document.getElementById('passphrase').value;
+        var rawText = document.getElementById('raw-text').value;
+        document.getElementById('encrypted-text').value = encryptText(rawText, passphrase);
+    }
+    function decrypt() {
+        var passphrase = document.getElementById('passphrase').value;
+        var rawText = document.getElementById('raw-text').value;
+        document.getElementById('encrypted-text').value = decryptText(rawText, passphrase);
+    }
+</script>
+
+</html>
